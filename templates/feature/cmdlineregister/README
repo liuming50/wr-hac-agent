@@ -1,0 +1,10 @@
+Creating a README file in the same directory as the template will
+cause the README to get linked into the platform project READMES
+directory automatically.
+
+This example adds some post filesystem generation modification steps.
+
+There are two ways to produce modifications.  The first is by adding an XML
+changelist.xml file, a format produced by Workbench.  The second is to add
+one or more files fs_final*.sh.  These are shell scripts that will be executed
+in the order in which they are discovered.
