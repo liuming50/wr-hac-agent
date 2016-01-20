@@ -15,15 +15,21 @@ var pinCodeData = {
  * showPinCodeDialog() - Display the PIN Code Generation modal dialog box
  */
  function showPinCodeDialog() {
-    document.getElementById("genPinCodeDialog").style.display="block";
+ 
+   	// Clear out any previous values. 
+	document.getElementById("pinCodeDeviceName").value = "";
+	document.getElementById("pinCodeProxyURL").value = "";
+   
+    // Turn on the dialog box
+    document.getElementById("genPinCodeDialog").style.display = "block";
 
     document.getElementById('pinCodeGetButton').disabled = false;
 }
 
 /*
- * _hidePinCodeDialog() - Hide the PIN Code Generation modal dialog box 
+ * hidePinCodeDialog() - Hide the PIN Code Generation modal dialog box 
  */
-function _hidePinCodeDialog() {
+function hidePinCodeDialog() {
 
     // If there is an active timer, cancel it so we don't get any more callbacks
 	if (pinCodeData.timerID !== 0) { 
@@ -111,7 +117,7 @@ function _pinCodeTimeoutEvent(){
         document.getElementById('pinCodeCancelButton').style.visibility = "hidden";
         
         _stopPinCodeProgress();				// Clean up the progress bar
-        _hidePinCodeDialog();	// Remove the Generate Token dialog box
+        hidePinCodeDialog();	// Remove the Generate Token dialog box
         loadStatusTbl();			// Update current board status page 
         }
     else {
@@ -133,7 +139,7 @@ return;
  * of minutes remaining to decrement to 0 at which time the token is removed from
  * the screen.
  *
- * This routine works together with pinCodeTimeoutEvent() to implement the countdown.
+ * This routine works together with _pinCodeTimeoutEvent() to implement the countdown.
  *
  * The following values are optional from the Dialog Box:
  *
@@ -219,7 +225,7 @@ function doGetPinCode() {
             document.getElementById('pinCodeGetButton').disabled = true;
         
             // Set a timer to fire in 1 percent so we can update the time remaining
-            pinCodeData.timerID = setTimeout("pinCodeTimeoutEvent()", pinCodeData.ticksPerPercent);
+            pinCodeData.timerID = setTimeout("_pinCodeTimeoutEvent()", pinCodeData.ticksPerPercent);
             }
         else
             {
@@ -281,7 +287,7 @@ function doPinCodeUsed() {
     document.getElementById('pinCodeUsedButton').style.visibility = "hidden";
     
     _stopPinCodeProgress();	// Clean up progress bar
-    _hidePinCodeDialog();	// Remove the Generate Token dialog
+    hidePinCodeDialog();	// Remove the Generate Token dialog
     loadStatusTbl();		// Update board status info
     
     return;
@@ -302,7 +308,7 @@ function doPinCodeCancel() {
      // If the user has not initiated a token request, just hide the dialog box, 
      // update the board status info, and return.
     if (pinCodeData.pinRequested === false) {
-        _hidePinCodeDialog();
+        hidePinCodeDialog();
         loadStatusTbl();
         return;
         }
@@ -346,7 +352,7 @@ function doPinCodeCancel() {
                document.getElementById('pinCodeUsedButton').style.visibility = "hidden";
                
                _stopPinCodeProgress();		// Clean up progress bar
-               _hidePinCodeDialog();		// Remove the Generate Token dialog
+               hidePinCodeDialog();		// Remove the Generate Token dialog
                loadStatusTbl();				// Update board status info
                }
            };  // End onreadystatechange

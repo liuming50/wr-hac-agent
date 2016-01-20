@@ -19,9 +19,9 @@ function showRegisterDeviceDialog() {
 }
 
 /*
- * _hideRegisterDeviceDialog() - Hide the Register Device modal dialog box
+ * hideRegisterDeviceDialog() - Hide the Register Device modal dialog box
  */
-function _hideRegisterDeviceDialog() {    
+function hideRegisterDeviceDialog() {    
     document.getElementById("regDeviceDialog").style.display="none";
 }
 
@@ -103,7 +103,7 @@ function doRegisterDevice() {
         
         // Clear off the dialog box and go back to the "home" screen
         stopSpin();
-        _hideRegisterDeviceDialog();
+        hideRegisterDeviceDialog();
         loadStatusTbl();    
         return; // readyState == 4
         } 

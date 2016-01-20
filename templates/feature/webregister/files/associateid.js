@@ -10,13 +10,20 @@
  */
  
 function showAssociateByIdDialog() {
+
+    // Clear out any previous values
+    document.getElementById("associateDevID").value = "";
+    document.getElementById("associateDevServer").value = "";
+    document.getElementById("associateDevProxy").value = "";
+    
+    // Show the dialog
     document.getElementById("associateDevDialog").style.display="block";
 }
 
 /*
- * _hideAssociateDevDialog() - Hide the Device Creation modal dialog box
+ * hideAssociateDevDialog() - Hide the Device Creation modal dialog box
  */
-function _hideAssociateDevDialog() {
+function hideAssociateDevDialog() {
     document.getElementById("associateDevDialog").style.display="none";
 }
 
@@ -97,7 +104,7 @@ function doAssociateDevWithID() {
         
         // Clear off the dialog box and go back to the "home" screen
         stopSpin();
-        _hideAssociateDevDialog();
+        hideAssociateDevDialog();
         loadStatusTbl();    
         return; // readyState == 4
         }
