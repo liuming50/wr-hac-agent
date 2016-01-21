@@ -9,15 +9,16 @@
 # being generated in.
 
 
-# Places the files used by Helix App Cloud files to implement target based 
+# Places the files used by Helix App Cloud to implement target based 
 # device registration on the rootfs.  Several files are expected to be in the 
 # top level build direcory when ths script is executed.  They are:
 #
 # sdkName.txt - Contains teh SDK name. Should match SDK config.json "key"
 # sdkVersion.txt - Contains the SDK version. Must match SDK config.json "version"
-# hacServer.cfg - Pointer to the HAC server. 
+# hacServer.cfg - Pointer to the HAC server.  
+# hacProxy.cfg - HTTPS Proxy used for REST access to HAC server (optional)
 #
-# If these files are absent, default files are used that will not work until
+# If the sdk* files are absent, default files are used that will not work until
 # they are correctly populated.
 
 BASEDIR=$(dirname $0)

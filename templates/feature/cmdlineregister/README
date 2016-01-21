@@ -1,10 +1,60 @@
-Creating a README file in the same directory as the template will
-cause the README to get linked into the platform project READMES
-directory automatically.
+Helix App Cloud Command Line Target Registration
 
-This example adds some post filesystem generation modification steps.
+This is a optional component for Helix App Cloud.  It installs the
+registerTarget command and supporting files.  registerTarget allows
+users to associate the baord it runs on with a device in their Helix
+App Cloud workspace.  It supports 3 methods to do this:
 
-There are two ways to produce modifications.  The first is by adding an XML
-changelist.xml file, a format produced by Workbench.  The second is to add
-one or more files fs_final*.sh.  These are shell scripts that will be executed
-in the order in which they are discovered.
+ 1. User supplies their login credentials and a desired device name
+    and the device appears in their workspace.
+ 2. User requests a PIN code which can then be used in the Helix App
+    Cloud "New Device" workflow to create the device in his/her 
+    workspace.
+ 3. User has a device already created and associates the board with 
+    that device.
+
+There are several files that should be present in the projectDir 
+before building the Linux image.  They are:
+
+ /etc/defaut/sdkName.txt - Contains the name of the Helix App Cloud
+      SDK.  This is the same as the "key" value in the SDK config.json.
+ /etc/default/sdkVersion.txt - Contains the version of the Helix
+      App CLoud SDK.  This is the same as the "version" value in the 
+      SDK config.json.
+ /etc/default/hacServer.cfg - This is the FQDN or IP of the Helix App
+      Cloud Server used when one isn't specified by the user.  If absent
+      it will be set to "app.cloud.windriver.com" which will work for 
+      99% of the use cases.
+ /etc/default/hacProxy.cfg - Set to the URL of a HTTPS proxy server 
+      so that the board can invoke REST services on the Helix APP CLoud
+      server.  This is optional.  If there is one in projectDir it will
+      be used; otherwize it is assumed it is not needed.
+
+To add this to your build, do the following:
+
+ 1. add wr-helix-agent to your --with-layer arguments on the configure 
+    command line.
+ 2. Add feature/cmdlineregister to your --with-feature arguement on 
+    the configure command line.
+ 3. After running configure, create projectDir/sdkName.txt, projectDir/
+    sdkVersion.cfg.  You can also add the optional files projectDir/
+    hacServer.cfg and projectDir/hacProxy.cfg.
+ 4. Build your image
+
+For more information on using registerTarget invoke with the -? argument.
+
+
+Contents:
+
+changelist.xml  - Not used
+fs_final.sh     - Does all the work to copy files to the rootfs
+image.inc       - Dependencies, mainly perl
+README          - This file
+template.conf   - WRLinux config files
+
+./files:
+HelixUtils.pm   - Perl Library used by registration scripts
+registerTarget  - registerTarget command
+sdkName.txt     - A default (bogus) file used when one is not provided
+sdkVersion.txt  - A default (bogus) file used when one is not provided
+

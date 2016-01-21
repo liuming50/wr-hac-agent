@@ -14,6 +14,3 @@ IMAGE_INSTALL += "perl-lib"
 IMAGE_INSTALL += "perl-module-cpan"
 IMAGE_INSTALL += "perl-module-unicore"
 IMAGE_INSTALL += "perl-module-cgi"
-
-
-
