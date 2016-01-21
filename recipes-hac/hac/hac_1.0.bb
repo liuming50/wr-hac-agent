@@ -21,7 +21,7 @@ SRC_URI = "git://git.wrs.com/git/projects/tcf-c-core.git;branch=wb_vadk \
 
 DEPENDS = "util-linux openssl"
 
-RDEPENDS_${PV} = "perl"
+# RDEPENDS_${PV} = "perl"
 
 S = "${WORKDIR}/git"
 

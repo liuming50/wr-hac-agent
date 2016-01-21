@@ -11,25 +11,29 @@
 # HAC default web page for lighttpd server
 BASEDIR=$(dirname $0)
 
-cp $BASEDIR/files/*.html $IMAGE_ROOTFS/www/pages
-chmod a+r $IMAGE_ROOTFS/www/pages/*.html
+cp $BASEDIR/files/pages/* $IMAGE_ROOTFS/www/pages
+chmod a+r $IMAGE_ROOTFS/www/pages/*
 
 mkdir -p $IMAGE_ROOTFS/www/pages/cgi-bin
 chmod a+rx $IMAGE_ROOTFS/www/pages/cgi-bin
-cp $BASEDIR/files/*.cgi $IMAGE_ROOTFS/www/pages/cgi-bin
-chmod a+rx $IMAGE_ROOTFS/www/pages/cgi-bin/*.cgi
+cp $BASEDIR/files/cgi-bin/* $IMAGE_ROOTFS/www/pages/cgi-bin
+chmod a+rx $IMAGE_ROOTFS/www/pages/cgi-bin/*
 
 mkdir -p $IMAGE_ROOTFS/www/pages/scripts
 chmod a+rx $IMAGE_ROOTFS/www/pages/scripts
-cp $BASEDIR/files/*.js $IMAGE_ROOTFS/www/pages/scripts
-chmod a+r $IMAGE_ROOTFS/www/pages/scripts/*.js
+cp $BASEDIR/files/scripts/* $IMAGE_ROOTFS/www/pages/scripts
+chmod a+r $IMAGE_ROOTFS/www/pages/scripts/*
+
+mkdir -p $IMAGE_ROOTFS/www/pages/images
+chmod a+rx $IMAGE_ROOTFS/www/pages/images
+cp $BASEDIR/files/images/* $IMAGE_ROOTFS/www/pages/images
+chmod a+r $IMAGE_ROOTFS/www/pages/images/*
 
 # If using lighttpd then we need to fix up the config file to enable 
 # cgi processing
 if [ -e $IMAGE_ROOTFS/etc/lighttpd.conf ]; then
      echo "Saving pre-exiting lighttpd.conf to lighttpd.conf.orig"
      cp $IMAGE_ROOTFS/etc/lighttpd.conf $IMAGE_ROOTFS/etc/lighttpd.conf.orig
-     echo "Pathcing etc/lighttpd.conf to enable CGI"
+     echo "Patching etc/lighttpd.conf to enable CGI"
      $BASEDIR/files/fix_lighttpd.sh $IMAGE_ROOTFS/etc/lighttpd.conf.orig $IMAGE_ROOTFS/etc/lighttpd.conf $IMAGE_ROOTFS/tmp
 fi
-
