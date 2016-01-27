@@ -207,7 +207,7 @@ span.align-center {
   clear: both; }
   span.align-center > span {
     display: block;
-    overflow: hidden;
+    overflow: hidden;<A NAME="method1"></A>
     margin: 13px auto 0;
     text-align: center; }
   span.align-center span img {
@@ -306,35 +306,33 @@ sup {
 <body>
 <h1 id="toc_0">Registering Your Target</h1>
 
-<p>In order to use your board you need to register it with your user account.  Once registered, the board will automatically contact the Helix App Cloud servers whenever it is booted.  When you login, you will see the board as &quot;online&quot;.</p>
+<p>When you create a device in Helix App Cloud, you can associate that device with either simulated hardware or a physical target. Simulated hardware is automatically registered and available for use with your device. However, physical targets must be registered with your user account. Once registered, a target board automatically contacts the Helix App Cloud server any time it is booted. When you log into Helix App Cloud, the target displays its status as &quot;online&quot;.</p>
 
-<p>There are 3 methods that can be used to register your board:</p>
+<p>Register your board using one of the following methods:</p>
 
 <ul>
-<li>Create a Device using your login credentials and supplying a device name. This is the simplest in that it involves the fewest steps.</li>
-<li>Have Helix App Cloud issue a PIN number for your board which you can the use to create a device using Helix App Cloud. This method requires additional steps; however, it can be done without login credentials.</li>
-<li>Associate your board with a device that has already been created. This method is best when exchanging boards between users.</li>
+<li><A HREF="#method1">Method 1</A>: Use your login credentials to create a Helix App Cloud device and register your target board. (This is the simplest method.)</li>
+<li><A HREF="#method2">Method 2</A>: Request that Helix App Cloud issue a PIN number for your board. Use this PIN to create a Helix App Cloud device and register the target. While this method requires additional steps, it allows you to register the board without login credentials.</li>
+<li><A HREF="#method3">Method 3</A>: Associate your board with an existing Helix App Cloud device. This method works well when exchanging boards between users.</li>
 </ul>
 
-<p>The sections below will describe each method.</p>
+<p>For information on reviewing your target settings, accessing advanced settings, and setting up an HTTPS proxy, see <A HREF="#moreinfo">More Information</A>. 
 
-<h2 id="toc_1">Creating an Account</h2>
+<h2 id="toc_1">Before You Begin</h2>
 
-<p>If you do not already have a Helix App Cloud account you should create one now by going to <a href="http://app.cloud.windriver.com">app.cloud.windriver.com</a> or another URL you were supplied with.  Select the <strong>Register Now</strong> button and follow the instructions provided.   </p>
+<p>If you have not already done so, create a Helix App Cloud account by going to <a href="http://app.cloud.windriver.com">app.cloud.windriver.com</a> or another URL, if you are supplied with one. Click <strong>Register Now</strong> and follow the instructions provided. </p>
 
-<h2 id="toc_2">Device Status Page</h2>
+<h2 id="toc_3"><A NAME="method1"></A>Method 1: Register the Target Using Your Login Credentials</h2>
 
-<p>The Web UI will always show the current board settings. You can refresh the settings at any time using the Refresh ICON in the upper left corner of the menu bar.  Usually, the page will self-refresh whenever a change is made.</p>
+<p>This method adds a device to your Helix App Cloud workspace and registers your target.  
 
-<p align="center"><img src="images/Status.png" alt=""></p>
-
-<h2 id="toc_3">Creating a Device</h2>
-
-<p>This is a one step process to add a device to your Helix App Cloud workspace.  Select Register--&gt;Create Device. You will be presented with a Dialog box as shown below. </p>
+<ol>
+<li>On the target-based web page, select <strong>Register</strong> --&gt; <strong>Create Device</strong>.</li>
+<p>The following dialog appears:</p>
 
 <p align="center"><img src="images/CreateDev.png" alt=""></p>
 
-<p>Enter the information as described below.</p>
+<li>Enter the required information.</li> 
 
 <table>
 <thead>
@@ -348,36 +346,43 @@ sup {
 <tbody>
 <tr>
 <td style="text-align: center">User Name</td>
-<td style="text-align: left">Enter your Helix App Cloud user name, such as joe@coolcompany.com</td>
+<td style="text-align: left">Enter your Helix App Cloud username. For example, joe@coolcompany.com.</td>
 <td style="text-align: center">Yes</td>
 </tr>
 <tr>
 <td style="text-align: center">Password</td>
-<td style="text-align: left">Enter your Helix App Cloud password.  This is never saved and always transmitted over a secure link.</td>
+<td style="text-align: left">Enter your Helix App Cloud password. Your password is never saved and is always transmitted over a secure link.</td>
 <td style="text-align: center">Yes</td>
 </tr>
 <tr>
 <td style="text-align: center">Device Name</td>
-<td style="text-align: left">Give your board a name.  This will become the Device name in your Helix App Cloud workspace</td>
+<td style="text-align: left">Provide a descriptive name for your target board. This name is displayed as your Helix App Cloud device name in the Helix App Cloud workspace.</td>
 <td style="text-align: center">Yes</td>
 </tr>
 <tr>
 <td style="text-align: center">Target Agent SOCKS5 Proxy</td>
-<td style="text-align: left">If a Proxy is required to communicate with cloud services you can use a SOCKS5 proxy.  Enter a hostname and port using &quot;hostname:port&quot;</td>
+<td style="text-align: left">If you require a proxy to communicate with cloud services, use a SOCKS5 proxy. Enter a host name and port using the following format: &quot;hostname:port&quot;.</td>
 <td style="text-align: center">No</td>
 </tr>
 </tbody>
 </table>
 
-<p>After pressing the <strong>Create Device</strong> button, the board will exchange information with the Helix App Cloud servers.  When complete you will see the named Device in your Helix App Cloud workspace and it will show <strong>Online</strong> if communication has been established.</p>
+<li>Click <strong>Create Device</strong>.</li> 
+<p>The board exchanges information with the Helix App Cloud server. When complete, the named device appears in your Helix App Cloud workspace. If communication is successfully established, the status is shown as <strong>Online</strong> in the Helix App Cloud workspace.</p>
+</ol>
 
-<h2 id="toc_4">Generating a PIN Code</h2>
+<h2 id="toc_4"><A NAME="method2"></A>Method 2: Register the Target Using a Generated PIN Code</h2>
 
-<p>This is a multi step process to add a device to your Helix App Cloud workspace.  Start by selecting Register--&gt;Generate PIN.  You will be presented with a Dialog box as shown below.</p>
+<p>This process adds a device to your Helix App Cloud workspace and registers your target without requiring your Helix App Cloud credentials.</p>  
+
+<ol>
+<li>On the target-based web page, select <strong>Register</strong> --&gt; <strong>Generate PIN</strong>.</li> 
+
+<p>The following dialog box appears:</p>
 
 <p align="center" ><img src="images/CreatePIN.png" alt=""></p>
 
-<p>Enter the following information.</p>
+<li>Enter the required information.</li>
 
 <table>
 <thead>
@@ -391,38 +396,51 @@ sup {
 <tbody>
 <tr>
 <td style="text-align: center">Device Name</td>
-<td style="text-align: left">Give your board a name.  This will become the Device name in your Helix App Cloud workspace</td>
+<td style="text-align: left">Provide a descriptive name for your target board. This name is displayed as your Helix App Cloud device name in the Helix App Cloud workspace.</td>
 <td style="text-align: center">Yes</td>
 </tr>
 <tr>
 <td style="text-align: center">Target Agent SOCKS5 Proxy</td>
-<td style="text-align: left">If a Proxy is required to communicate with cloud services you can use a SOCKS5 proxy.  Enter a hostname and port using &quot;hostname:port&quot;</td>
+<td style="text-align: left">If you require a proxy to communicate with cloud services, use a SOCKS5 proxy. Enter a host name and port using the following format: &quot;hostname:port&quot;.</td>
 <td style="text-align: center">No</td>
 </tr>
 </tbody>
 </table>
 
-<p>Upon pressing <strong>Get PIN</strong> you will be presented with a highlighted PIN code and a countdown bar.  The code must be use within the time shown by the countdown bar, typically 20 minutes.</p>
+<li>Click <strong>Get PIN</strong>.</li> 
+<p>You are presented with a highlighted PIN code and a countdown bar. Note that the code must be use within the time shown by the countdown bar; typically, 20 minutes.</p>
 
-<p align="center" ><img src="images/PINTImeout.png" alt=""></p>
+<p align="center" ><img src="images/PinTimeout.png" alt=""></p>
+</ol>
 
-<h3 id="toc_5">Use the PIN Code</h3>
+<h3>Using the PIN</h3>
+<p>To use the pin, in another browser window or tab, go to <a href="http://app.cloud.windriver.com">Helix App Cloud</a> and perform the following steps.</p> 
 
-<p>In another browser window or tab, go to <a href="http://app.cloud.windriver.com">Helix App Cloud</a> and select <strong>Create Device</strong>.  Next select &quot;Create a device using it&#39;s unique ID&quot;.  Copy the highlighted PIN code and paste it into the dialog box on Helix App Cloud.  Your device will appear in your workspace and should be <strong>Online</strong>.</p>
+<ol>
+<li>Click <strong>Create Device</strong>.</li>  
 
-<p>Pressing the <strong>Device Created</strong> button to acknowledge that you have created a Device on Helix App Cloud.</p>
+<li>Select <strong>&quot;Create a device using it&#39;s unique ID&quot;</strong>.</li> 
 
-<p>Should you decide not to use the PIN Code, your can select <strong>Cancel</strong> in the &quot;PIN Code&quot; Dialog box.  Your board will remain unchanged.</p>
+<li>Copy the highlighted PIN code and paste it into the dialog box on Helix App Cloud.</li> 
+<p>The device appears in your workspace and shows a status of <strong>Online</strong>.</p>
 
-<h2 id="toc_6">Associate a Board with a Device ID</h2>
+<li>Click <strong>Device Created</strong>.</li> 
+<p>This acknowledges that you have created a device on Helix App Cloud.</li>
 
-<p>In some cases a Device already exists in your, or another persons, Helix App Cloud Workspace.  It is possible to associate a physical board with that Device.</p>
+<p>NOTE: If you do not wish to use the PIN Code after it is generated, click <strong>Cancel</strong> in the &quot;PIN Code&quot; dialog box. The target is not registered and your board remains unchanged.</p>
+</ol>
 
-<p>Choose Register--&gt;Associate Board and you will be presented with a dialog box like the one below.  </p>
+<h2 id="toc_6"><A NAME="method3"></A>Register the Target by Associating it with an Existing Device</h2>
+
+<p>If you, or another person, already have an existing Helix App Cloud device prepared for the target in your Helix App Cloud workspace, you can associate that device with your physical target to register the board.</p>
+
+<ol>
+<li>On the target-based web page, select <strong>Register</strong> --&gt; <strong>Associate Board</strong>.</li> 
+<p>The following dialog box appears:</p>
 
 <p align="center"><img src="images/AssociateDev.png" alt=""></p>
 
-<p>Fill in the fields as follows:</p>
+<li>Enter the required information.</li>
 
 <table>
 <thead>
@@ -436,36 +454,42 @@ sup {
 <tbody>
 <tr>
 <td style="text-align: center">Device ID</td>
-<td style="text-align: left">Copy the Device ID from a Helix App Cloud workspace that you wish to associate the physical board with into this field.  Device IDs are a string that looks like &quot;WR-TEST-F76D_bec719bb-d880-41a0-b2aa-e1a2ef1afb57&quot;.</td>
+<td style="text-align: left">Enter the Device ID for the Helix App Cloud device that you want to associate with the physical board. The device ID is a string similar to the following: &quot;WR-TEST-F76D_bec719bb-d880-41a0-b2aa-e1a2ef1afb57&quot;.</td>
 <td style="text-align: center">Yes</td>
 </tr>
 <tr>
 <td style="text-align: center">Server Address</td>
-<td style="text-align: left">If you are using a non-standard Helix App Cloud server, enter the address of the server here. Most users will not use this</td>
+<td style="text-align: left">If you are using a non-standard Helix App Cloud server, enter the address of the server here. (This is not applicable to most users.)</td>
 <td style="text-align: center">No</td>
 </tr>
 <tr>
 <td style="text-align: center">SOCKS5 Proxy</td>
-<td style="text-align: left">If a Proxy is required to communicate with cloud services you can use a SOCKS5 proxy.  Enter a hostname and port using &quot;hostname:port&quot;</td>
+<td style="text-align: left">If you require a proxy to communicate with cloud services, use a SOCKS5 proxy. Enter a host name and port using the following format: &quot;hostname:port&quot;.</td>
 <td style="text-align: center">No</td>
 </tr>
 </tbody>
 </table>
 
-<p>Click the <strong>Associate</strong> button and you will see the Device in the Helix App Cloud Workspace come online.</p>
+<li>Click <strong>Associate</strong>.</li>  
+<p>The device comes online in the Helix App Cloud workspace.</p>
 
-<h2 id="toc_7">Advanced Topics</h2>
+<h2 id="toc_7"><A NAME="moreinfo"></A>More Information</h2>
+
+<h3 id="toc_2">Device Status Page</h3>
+
+<p>The target-based website always shows the current board settings. You can refresh the settings at any time by clicking the Refresh icon in the upper left corner of the menu bar. The page typically refreshes whenever a change is made to the settings.</p>
+
+<p align="center"><img src="images/Status.png" alt=""></p>
 
 <h3 id="toc_8">Toggle Advanced Mode</h3>
 
-<p>If you wish to see additional information regarding board registration you can select Utilities--&gt;Toggle Advanced.</p>
+<p>To see additional information regarding board registration, select <strong>Utilities</strong> --&gt; <strong>Toggle Advanced</strong>.</p>
 
 <h3 id="toc_9">HTTPS Proxy</h3>
 
-<p>Some sites require a proxy in order to communicate with HTTP(S) servers. When registering a board using any of the methods above, the board will attempt to communicate with Helix App Cloud using &quot;https://&quot; style URLs.   To set the correct path to the HTTP(S) Proxy at your facility, select Utilities--&gt;Manage Proxy.    The URL you enter is probably the same HTTPS proxy URL that is set in your web browser.</p>
+<p>Some sites require a proxy in order to communicate with an HTTP(S) server. When registering a board using any of the methods provided, the target attempts to communicate with Helix App Cloud using &quot;https://&quot; style URLs. To set the correct path to the HTTP(S) proxy at your facility, select <strong>Utilities</strong> --&gt; <strong>Manage Proxy</strong>. Typically, the URL you need to enter is the same HTTPS proxy URL that is set in your web browser.</p>
 
-<p>Note that the HTTPS proxy is not the same as the SOCKS5 proxy.  The SOCKS5 proxy is used to establish a persistent link between your board and Helix App Cloud to facilitate debugging and analysis tools.  HTTPS proxy only supports a transaction-style link and is used only during the board registration process.</p>
-
+<p>NOTE: The HTTPS proxy is not the same as the SOCKS5 proxy. The SOCKS5 proxy is used to establish a persistent link between your board and Helix App Cloud to facilitate debugging and analysis tools. The HTTPS proxy only supports a transaction-style link and is used only during the board registration process.</p>
 
 </body>
 
