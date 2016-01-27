@@ -775,6 +775,7 @@ sub parseDevMgrData
    ${ $cfgData }{ serverPort } = $serverPort;
    ${ $cfgData }{ deviceName } = $devName;
    ${ $cfgData }{ deviceId } = $devID;
+   ${ $cfgData }{ fullDevID } = $deviceid;
 
    if ( $proxy )
    {

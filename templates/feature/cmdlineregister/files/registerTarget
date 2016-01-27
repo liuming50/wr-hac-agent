@@ -437,7 +437,7 @@ if ( $useInternalInfo )
 	exit 0;
     }
 
-    $usrDeviceID = $deviceMgrCfg{ deviceName };
+    $usrDeviceID = $deviceMgrCfg{ fullDevID };
     $hacServer = $deviceMgrCfg{ serverIP };
 }
 

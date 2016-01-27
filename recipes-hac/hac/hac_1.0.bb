@@ -5,7 +5,7 @@ BUGTRACKER = "https://bugs.eclipse.org/bugs/"
 LICENSE = "EPL-1.0 | EDL-1.0"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/hac.service;md5=b105f411c76cfdad3905b2b2edcdbd40"
 
-SRCREV = "b6d340279d880f527558300ab348485dc064d9d9"
+SRCREV = "4191bbcef38ee288c918b92a9d40450a4655b5a7"
 
 PV = "wb_vadk+git${SRCPV}"
 PR = "r4"
@@ -13,8 +13,7 @@ PR = "r4"
 # The config files are machine specific
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-# SRC_URI = "git://github.com/WindRiver-OpenSourceLabs/tcf-c-core.git;branch=hac 
-SRC_URI = "git://git.wrs.com/git/projects/tcf-c-core.git;branch=wb_vadk \
+SRC_URI = "git://github.com/WindRiver-OpenSourceLabs/tcf-c-core.git;branch=hac \
 	   file://hac.init \
 	   file://hac.service \
 	   "
