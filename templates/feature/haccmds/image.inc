@@ -1,3 +1,4 @@
+IMAGE_INSTALL += "haccmds"
 IMAGE_INSTALL += "perl"
 IMAGE_INSTALL += "perl-modules"
 IMAGE_INSTALL += "perl-module-env"
@@ -14,6 +15,3 @@ IMAGE_INSTALL += "perl-lib"
 IMAGE_INSTALL += "perl-module-cpan"
 IMAGE_INSTALL += "perl-module-unicore"
 IMAGE_INSTALL += "perl-module-cgi"
-
-
-

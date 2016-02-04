@@ -11,23 +11,23 @@
 # HAC default web page for lighttpd server
 BASEDIR=$(dirname $0)
 
-cp $BASEDIR/files/pages/* $IMAGE_ROOTFS/www/pages
-chmod a+r $IMAGE_ROOTFS/www/pages/*
+#cp $BASEDIR/files/pages/* $IMAGE_ROOTFS/www/pages
+#chmod a+r $IMAGE_ROOTFS/www/pages/*
 
-mkdir -p $IMAGE_ROOTFS/www/pages/cgi-bin
-chmod a+rx $IMAGE_ROOTFS/www/pages/cgi-bin
-cp $BASEDIR/files/cgi-bin/* $IMAGE_ROOTFS/www/pages/cgi-bin
-chmod a+rx $IMAGE_ROOTFS/www/pages/cgi-bin/*
+#mkdir -p $IMAGE_ROOTFS/www/pages/cgi-bin
+#chmod a+rx $IMAGE_ROOTFS/www/pages/cgi-bin
+#cp $BASEDIR/files/cgi-bin/* $IMAGE_ROOTFS/www/pages/cgi-bin
+#chmod a+rx $IMAGE_ROOTFS/www/pages/cgi-bin/*
 
-mkdir -p $IMAGE_ROOTFS/www/pages/scripts
-chmod a+rx $IMAGE_ROOTFS/www/pages/scripts
-cp $BASEDIR/files/scripts/* $IMAGE_ROOTFS/www/pages/scripts
-chmod a+r $IMAGE_ROOTFS/www/pages/scripts/*
+#mkdir -p $IMAGE_ROOTFS/www/pages/scripts
+#chmod a+rx $IMAGE_ROOTFS/www/pages/scripts
+#cp $BASEDIR/files/scripts/* $IMAGE_ROOTFS/www/pages/scripts
+#chmod a+r $IMAGE_ROOTFS/www/pages/scripts/*
 
-mkdir -p $IMAGE_ROOTFS/www/pages/images
-chmod a+rx $IMAGE_ROOTFS/www/pages/images
-cp $BASEDIR/files/images/* $IMAGE_ROOTFS/www/pages/images
-chmod a+r $IMAGE_ROOTFS/www/pages/images/*
+#mkdir -p $IMAGE_ROOTFS/www/pages/images
+#chmod a+rx $IMAGE_ROOTFS/www/pages/images
+#cp $BASEDIR/files/images/* $IMAGE_ROOTFS/www/pages/images
+#chmod a+r $IMAGE_ROOTFS/www/pages/images/*
 
 # If using lighttpd then we need to fix up the config file to enable 
 # cgi processing

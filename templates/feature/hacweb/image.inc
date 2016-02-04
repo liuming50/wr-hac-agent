@@ -1,3 +1,7 @@
+IMAGE_INSTALL += "haccmds"
+IMAGE_INSTALL += "hacweb"
+IMAGE_INSTALL += "lighttpd"
+IMAGE_INSRALL += "lighttpd-module-cgi"
 IMAGE_INSTALL += "perl"
 IMAGE_INSTALL += "perl-modules"
 IMAGE_INSTALL += "perl-module-env"

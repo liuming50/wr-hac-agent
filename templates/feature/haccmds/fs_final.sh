@@ -23,13 +23,6 @@
 
 BASEDIR=$(dirname $0)
 
-# Copy the registerTarget script and supporting perl module to the rootfs
-cp $BASEDIR/files/registerTarget $IMAGE_ROOTFS/usr/sbin
-chmod a+rx $IMAGE_ROOTFS/usr/sbin/registerTarget
-mkdir -p $IMAGE_ROOTFS/usr/local/lib/site_perl
-cp $BASEDIR/files/HelixUtils.pm $IMAGE_ROOTFS/usr/local/lib/site_perl
-chmod a+r $IMAGE_ROOTFS/usr/local/lib/site_perl/HelixUtils.pm
-
 # Place the required /etc/default/sdkName.txt on the rootfs. If
 # there is one in the project dir use it, else use a default one.
 if [ -e $TOPDIR/../sdkName.txt ]; then
