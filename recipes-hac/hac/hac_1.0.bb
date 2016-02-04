@@ -13,6 +13,7 @@ PR = "r4"
 # The config files are machine specific
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+# Origin location: git://git.wrs.com/git/projects/tcf-c-core.git
 SRC_URI = "git://github.com/WindRiver-OpenSourceLabs/tcf-c-core.git;branch=hac \
 	   file://hac.init \
 	   file://hac.service \
