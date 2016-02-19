@@ -26,7 +26,7 @@ BASEDIR=$(dirname $0)
 # Place the required /etc/default/sdkName.txt on the rootfs. If
 # there is one in the project dir use it, else use a default one.
 if [ -e $TOPDIR/../sdkName.txt ]; then
-    cp $TOPDIR/../sdkName.txt $IMAGE_ROOTFS/etc/default
+    cp $TOPDIR/../sdkName.txt $IMAGE_ROOTFS/etc/default/sdkName.txt
 else
     cp $BASEDIR/files/sdkName.txt $IMAGE_ROOTFS/etc/default/sdkName.txt
 fi
@@ -44,7 +44,7 @@ chmod a+r $IMAGE_ROOTFS/etc/default/sdkVersion.txt
 # Place the required /etc/default/hacServer.cfg on the rootfs
 # The default is to set it to app.cloud.windriver.com
 if [ -e $TOPDIR/../hacServer.cfg ]; then
-    cp $TOPDIR/../hacServer.cfg $IMAGE_ROOTFS/etc/default
+    cp $TOPDIR/../hacServer.cfg $IMAGE_ROOTFS/etc/default/hecServer.cfg
 else
     echo "app.cloud.windriver.com" > $IMAGE_ROOTFS/etc/default/hacServer.cfg
 fi
