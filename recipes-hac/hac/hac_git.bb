@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/hac.service;md5=b105f411c76cfdad3905b2b2ed
 SRCREV = "4191bbcef38ee288c918b92a9d40450a4655b5a7"
 
 PV = "wb_vadk+git${SRCPV}"
-PR = "r4"
 
 # The config files are machine specific
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -39,8 +38,6 @@ MAKE_ARCH = "`echo ${TARGET_ARCH} | sed s,i.86,i686,`"
 MAKE_OS = "`echo ${TARGET_OS} | sed s,^linux.*,GNU/Linux,`"
 
 EXTRA_OEMAKE = "MACHINE=${MAKE_ARCH} OPSYS=${MAKE_OS} 'CC=${CC}' 'AR=${AR}' 'Conf=Release'"
-
-FILES_${PN} += "/usr/local"
 
 do_compile() {
 	export CONFIGURE_FLAGS="--host=${MAKE_ARCH}-gnu-linux"
