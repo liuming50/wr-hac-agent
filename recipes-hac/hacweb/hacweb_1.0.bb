@@ -4,7 +4,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PN = "hacweb"
-PR = "r1"
 
 SRC_URI = "file://pages/index.html \
            file://pages/tgtRegHelp.html \
@@ -28,10 +27,6 @@ SRC_URI = "file://pages/index.html \
            file://scripts/pincode.js \
            file://scripts/register.js \
            "
-DEPENDS = "perl"
-
-RPROVIDES_${PN} = "${PN}"
-
 S = "${WORKDIR}"
 
 FILES_${PN} += "/www \

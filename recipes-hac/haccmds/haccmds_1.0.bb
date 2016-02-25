@@ -5,15 +5,10 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 
 PN = "haccmds"
-PR = "r1"
 
 SRC_URI = "file://registerTarget \
 	   file://HelixUtils.pm \
 	   "
-
-DEPENDS = "perl"
-
-RPROVIDES_${PN} = "${PN}"
 
 S = "${WORKDIR}"
 
