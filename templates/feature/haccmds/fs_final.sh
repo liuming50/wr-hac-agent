@@ -44,7 +44,7 @@ chmod a+r $IMAGE_ROOTFS/etc/default/sdkVersion.txt
 # Place the required /etc/default/hacServer.cfg on the rootfs
 # The default is to set it to app.cloud.windriver.com
 if [ -e $TOPDIR/../hacServer.cfg ]; then
-    cp $TOPDIR/../hacServer.cfg $IMAGE_ROOTFS/etc/default/hecServer.cfg
+    cp $TOPDIR/../hacServer.cfg $IMAGE_ROOTFS/etc/default/hacServer.cfg
 else
     echo "app.cloud.windriver.com" > $IMAGE_ROOTFS/etc/default/hacServer.cfg
 fi
