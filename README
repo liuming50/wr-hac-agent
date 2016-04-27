@@ -4,16 +4,13 @@ wr-hac-agent
 This is a layer to add connectivity to the Wind River Helix App
 Cloud. This includes:
 
-* The  necessary kernel components and files in the target file  
-  system (feature/hac). This feature is required.
-
 * The necessary scripts to add target based registration from
-  the command line (feature/omdlineregister).  This feature
+  the command line (feature/haccmds).  This feature
   is optonal.
 
 * The necessary scripts to add target based registration using
-  a target based web server (feature/webregister). This 
-  feature is optional.  If used, feature/cmdlineregister is 
+  a target based web server (feature/hacweb). This
+  feature is optional.  If used, feature/hacweb is
   required. 
 
 To use the layer, include it in a --with-layer option to configure.
