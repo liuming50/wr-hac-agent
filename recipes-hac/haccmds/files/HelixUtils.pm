@@ -271,7 +271,7 @@ sub hacGetCSRFToken
 
     # HAC server request command
     my $cmd = 
-	"curl https://$hacServer/csrfToken -k -s -S " . 
+	"curl -f https://$hacServer/csrfToken -k -s -S " . 
 	"-c $tmpDir/cookies.txt -b $tmpDir/cookies.txt 2>&1";
     
     # Error to return if the request fails
@@ -313,7 +313,7 @@ sub hacGenerateNamedTarget
 
    # Generate a target with the specified name
    my $cmd = 
-	"curl -X POST -k " .
+	"curl -f -X POST -k " .
 	"-H \"x-csrf-token: $tokenCSRF\" " .
 	"https://$hacServer/api/v1/registration " .
 	"-H \"Content-Type: application/json\" " .
@@ -360,7 +360,7 @@ sub hacGetKeyExpiration
 
     # HAC server request command
     my $cmd = 
-	"curl -X GET -k -H \"x-csrf-token: $tokenCSRF\" " .
+	"curl -f -X GET -k -H \"x-csrf-token: $tokenCSRF\" " .
 	"https://$hacServer/api/v1/registration/$devRegKey " .
 	"-H \"Content-Type: application/json\" " .
 	" -c $tmpDir/cookies.txt -b $tmpDir/cookies.txt -s -S 2>&1";    
@@ -402,7 +402,7 @@ sub hacGetDeviceStatus
 
     # HAC server request command
     my $cmd = 
-	"curl -X POST -k -s -S " .
+	"curl -f -X POST -k -s -S " .
 	"-H \"x-csrf-token: $tokenCSRF\" " .
 	"https://$hacServer/api/v1/registration/actions " .
 	"-H \"Content-Type: application/json\" " .
@@ -450,7 +450,7 @@ sub hacGetWRSToken
 
     # HAC server request command
     my $cmd = 
-	"curl -X POST -k -u $usrName:$usrPassword https://$hacServer/api/v1/authorize " .
+	"curl -f -X POST -k -u $usrName:$usrPassword https://$hacServer/api/v1/authorize " .
         "-H \"Content-Type: application/json\" -H \"x-csrf-token: $tokenCSRF\" " .
         "-c $tmpDir/cookies.txt -b $tmpDir/cookies.txt -s -S 2>&1";
 
@@ -495,7 +495,7 @@ sub hacRegisterTarget
 
     # HAC server request command
     my $cmd = 
-	"curl -X POST -k -H \"Authorization: Bearer $tokenWRS\" " .
+	"curl -f -X POST -k -H \"Authorization: Bearer $tokenWRS\" " .
         "-H \"x-csrf-token: $tokenCSRF\" https://$hacServer/api/v1/devices " .
         "-H \"Content-Type: application/json\" -d '" .
 	encode_json( { name => $boardName, SDKKey => $sdkName, SDKVersion => $sdkVer } ) .
