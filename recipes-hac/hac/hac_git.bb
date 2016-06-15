@@ -3,17 +3,16 @@ HOMEPAGE = "http://wiki.eclipse.org/TCF"
 BUGTRACKER = "https://bugs.eclipse.org/bugs/"
 
 LICENSE = "EPL-1.0 | EDL-1.0"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/hac.service;md5=b105f411c76cfdad3905b2b2edcdbd40"
+LIC_FILES_CHKSUM = "file://COPYING;md5=3da9cfbcb788c80a0384361b4de20420"
 
-SRCREV = "4191bbcef38ee288c918b92a9d40450a4655b5a7"
+SRCREV = "81e7a661bfbf7247f5a637ee307d34987eef9371"
 
-PV = "wb_vadk+git${SRCPV}"
+PV = "main+git${SRCPV}"
 
 # The config files are machine specific
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-# Origin location: git://git.wrs.com/git/projects/tcf-c-core.git
-SRC_URI = "git://github.com/WindRiver-OpenSourceLabs/tcf-c-core.git;branch=hac \
+SRC_URI = "gitsm://github.com/WindRiver-OpenSourceLabs/wr-appcloud-agent.git \
 	   file://hac.init \
 	   file://hac.service \
 	   "
@@ -24,7 +23,7 @@ DEPENDS = "util-linux openssl"
 
 S = "${WORKDIR}/git"
 
-LSRCPATH = "${S}/examples/device"
+LSRCPATH = "${S}"
 
 inherit update-rc.d systemd
 
