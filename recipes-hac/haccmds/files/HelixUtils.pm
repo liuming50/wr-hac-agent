@@ -18,28 +18,20 @@
 package HelixUtils;
 
 use strict;
-use warnings;
 
 use Exporter;
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 
 use Env;
 
-#use Data::Dumper;
-
-$VERSION     = 1.2;
+$VERSION     = 1.3;
 @ISA         = qw(Exporter);
-@EXPORT      = qw( setLogLvl setLogOptions logMsg execCmd hacGetCSRFToken hacGenerateNamedTarget hacGetKeyExpiration hacGetDeviceStatus hacGetWRSToken hacRegisterTarget getDefaultSdkVer getDefaultSdkName setDefaultSdkCfgData getDefaultSdkCfgData getDefaultHacServer getDefaultBoardName getDefaultHttpsProxy setDefaultHttpsProxy useHttpsProxy parseDevMgrData );
+@EXPORT      = qw( setLogLvl setLogOptions logMsg execCmd hacGetCSRFToken hacGenerateNamedTarget hacGetKeyExpiration hacGetDeviceStatus hacGetWRSToken getDefaultSdkVer getDefaultSdkName setDefaultSdkCfgData getDefaultSdkCfgData getDefaultHacServer getDefaultBoardName getDefaultHttpsProxy setDefaultHttpsProxy useHttpsProxy parseDevMgrData );
 @EXPORT_OK   = ();
-%EXPORT_TAGS = ( DEFAULT => [qw( &setLogLvl &setLogOptions &logMsg &execCmd &hacGetCSRFToken &hacGenerateNamedTarget &hacGetKeyExpiration &hacGetDeviceStatus &hacGetWRSToken &hacRegisterTarget &getDefaultSdkVer &getDefaultSdkName &setDefaultSdkCfgData &getDefaultSdkCfgData &getDefaultHacServer &getDefaultBoardName &getDefaultHttpsProxy &setDefaultHttpsProxy &useHttpsProxy &parseDevMgrData )] );
+%EXPORT_TAGS = ( DEFAULT => [qw( &setLogLvl &setLogOptions &logMsg &execCmd &hacGetCSRFToken &hacGenerateNamedTarget &hacGetKeyExpiration &hacGetDeviceStatus &hacGetWRSToken &getDefaultSdkVer &getDefaultSdkName &setDefaultSdkCfgData &getDefaultSdkCfgData &getDefaultHacServer &getDefaultBoardName &getDefaultHttpsProxy &setDefaultHttpsProxy &useHttpsProxy &parseDevMgrData )] );
 
 use JSON::PP;
-use File::Temp qw/ tempdir /;
-use File::Spec::Functions;
-use File::Copy;
 use Sys::Syslog qw(:standard :macros);
-
-#use Data::Dumper;
 
 #  ****** NOTE ABOUT USE OF HTTPS_PROXY ****** 
 #
@@ -68,17 +60,17 @@ undef $logOutStream;
 # has previously setup syslog() properly.
 my $logUseSyslogF = 0;
 
-my $tmpDir = tempdir( CLEANUP => 1 );
-
 # The expected location for SDK name and version data
-my $sdkVerFile = catfile( File::Spec->rootdir(), "etc", "default", "sdkVersion.txt" );
-my $sdkNameFile = catfile( File::Spec->rootdir(), "etc", "default", "sdkName.txt" );
-my $sdkDevCfgFile = catfile( File::Spec->rootdir(), "etc", "default", "device_mgr.cfg" );
-my $backupSdkDevCfgFile = catfile( File::Spec->rootdir(), "etc", "default", "device_mgr.bak" );
-my $serverCfgFile = catfile( File::Spec->rootdir(), "etc", "default", "hacServer.cfg" );
-my $backupServerCfgFile = catfile( File::Spec->rootdir(), "etc", "default", "hacServer.bak" );
-my $sysBoardNameFile = catfile( File::Spec->rootdir(), "sys", "devices", "virtual", "dmi", "id", "board_name" );
-my $httpsProxyCfgFile = catfile( File::Spec->rootdir(), "etc", "default", "hacProxy.cfg" );				
+my $sdkVerFile = "/etc/default/sdkVersion.txt";
+my $sdkNameFile = "/etc/default/sdkName.txt";
+my $sdkDevCfgFile = "/etc/default/device_mgr.cfg";
+my $backupSdkDevCfgFile = "/etc/default/device_mgr.bak";
+my $serverCfgFile = "/etc/default/hacServer.cfg";
+my $backupServerCfgFile = "/etc/default/hacServer.bak";
+my $sysBoardNameFile = "/sys/devices/virtual/dmi/id/board_name";
+my $httpsProxyCfgFile = "/etc/default/hacProxy.cfg";
+
+my $tmpFile = "/tmp/regTgtCookies.txt";
 
 # A routine to execute a command and return the results. First arg is
 # the shell command string to evaluate. A scalar reference can be
@@ -272,7 +264,7 @@ sub hacGetCSRFToken
     # HAC server request command
     my $cmd = 
 	"curl -f https://$hacServer/csrfToken -k -s -S " . 
-	"-c $tmpDir/cookies.txt -b $tmpDir/cookies.txt 2>&1";
+	"-c $tmpFile -b $tmpFile 2>&1";
     
     # Error to return if the request fails
     my $errMsg = "ERROR: Getting CSRF token failed!";
@@ -320,7 +312,7 @@ sub hacGenerateNamedTarget
 	"-d '" .
 	encode_json( { name => $boardName, SDKKey => $sdkName, 
 		       SDKVersion => $sdkVer } ) . "' ".
-	"-c $tmpDir/cookies.txt -b $tmpDir/cookies.txt -s -S 2>&1";
+	"-c $tmpFile -b $tmpFile -s -S 2>&1";
     
     # Error to return if the request fails
     my $errMsg = "ERROR: Creating target [ $boardName ] " . 
@@ -363,7 +355,7 @@ sub hacGetKeyExpiration
 	"curl -f -X GET -k -H \"x-csrf-token: $tokenCSRF\" " .
 	"https://$hacServer/api/v1/registration/$devRegKey " .
 	"-H \"Content-Type: application/json\" " .
-	" -c $tmpDir/cookies.txt -b $tmpDir/cookies.txt -s -S 2>&1";    
+	" -c $tmpFile -b $tmpFile -s -S 2>&1";    
 
     # Error to return if the request fails
     my $errMsg = "ERROR: Can't get expiration key time!";
@@ -408,7 +400,7 @@ sub hacGetDeviceStatus
 	"-H \"Content-Type: application/json\" " .
 	"-d '" .
 	encode_json( { action => "getDeviceStatus", deviceId => "$devId" } ) .
-	"' -c $tmpDir/cookies.txt -b $tmpDir/cookies.txt 2>&1"; 
+	"' -c $tmpFile -b $tmpFile 2>&1"; 
 
     # Error to return if the request fails
     my $errMsg = 
@@ -452,7 +444,7 @@ sub hacGetWRSToken
     my $cmd = 
 	"curl -f -X POST -k -u $usrName:$usrPassword https://$hacServer/api/v1/authorize " .
         "-H \"Content-Type: application/json\" -H \"x-csrf-token: $tokenCSRF\" " .
-        "-c $tmpDir/cookies.txt -b $tmpDir/cookies.txt -s -S 2>&1";
+        "-c $tmpFile -b $tmpFile -s -S 2>&1";
 
     # Error to return if the request fails
     my $errMsg = "ERROR: Getting WRS token failed!";
@@ -477,53 +469,6 @@ sub hacGetWRSToken
 
     ${ $rslt } = 0;
     return $data{ token };
-}
-
-sub hacRegisterTarget
-{
-    my $hacServer = shift;
-    my $usrName = shift;
-    my $usrPassword = shift;
-    my $boardName = shift;
-    my $sdkName = shift;
-    my $sdkVer = shift;
-    my $tokenCSRF = shift;
-    my $tokenWRS = shift;
-
-    my $rslt = shift;
-    my $rsltStr = shift;    
-
-    # HAC server request command
-    my $cmd = 
-	"curl -f -X POST -k -H \"Authorization: Bearer $tokenWRS\" " .
-        "-H \"x-csrf-token: $tokenCSRF\" https://$hacServer/api/v1/devices " .
-        "-H \"Content-Type: application/json\" -d '" .
-	encode_json( { name => $boardName, SDKKey => $sdkName, SDKVersion => $sdkVer } ) .
-	"' -c $tmpDir/cookies.txt -b $tmpDir/cookies.txt -s -S 2>&1";
-
-    # Error to return if the request fails
-    my $errMsg = "ERROR: Creating target [ $boardName ] on server [ $hacServer ] failed!";
-
-    my $href = execServerRequest( $cmd );
-    my %data = %{ $href };
-
-    if ( exists $data{ error } )
-    {
-	if ( exists $data{ error }{ message } )
-	{
-	    ${ $rsltStr } = $data{ error }{ message };
-	}
-	else
-	{
-	    ${ $rsltStr } = $errMsg;
-	}
-
-	${ $rslt } = -1;
-	return "";
-    }
-
-    ${ $rslt } = 0;
-    return ( $data{ uid }, $data{ serverUrl } );
 }
 
 # Routine to read the SDK version from the standard file
@@ -580,7 +525,7 @@ sub setDefaultSdkCfgData
     # Backup any existing config file
     if ( -e $sdkDevCfgFile )
     {
-	move( $sdkDevCfgFile, $backupSdkDevCfgFile );
+	execCmd( "mv $sdkDevCfgFile $backupSdkDevCfgFile" );
     }
 
     my $f;
@@ -800,6 +745,11 @@ sub parseDevMgrData
    return 0;
 }
 
+END
+{
+    # Clean up cookie files
+    unlink $tmpFile;
+}
 
 # Must return a true value
 1;

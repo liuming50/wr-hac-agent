@@ -16,6 +16,7 @@
 
 # modification history
 # --------------------
+# 02aug16,jdw  Remove support for username/password registration
 # 28mar16,jdw  Update copyright header and license
 # 13aug15,jdw  Created
 
@@ -23,14 +24,6 @@
 # the HAC server
 
 use strict;
-use Data::Dumper;
-use File::Basename;
-use File::Spec;
-use File::Spec::Functions;
-use Cwd;
-use Cwd qw{ chdir abs_path };
-use File::Glob;
-use File::Temp qw/ tempfile tempdir /;
 
 use HelixUtils;
 
@@ -50,14 +43,7 @@ my $queryOperation = 0;
 my $useInternalInfo = 0;
 my $regServerIdF = 0;
 
-# The script can either register the device OR register and get a code
-# the user enters into the HAC site. This flag tells us which we want
-# to do.
-my $getRegCodeF = 0;
-
 # Variables for CLI options
-my $usrName;
-my $usrPassword;
 my $usrServer;
 my $usrTargetName;
 my $usrSdkName;
@@ -68,8 +54,6 @@ my $usrHttpsProxy;
 # The user may want to clear the HTTPS
 my $clearHttpsF = 0;
 
-undef $usrName;
-undef $usrPassword;
 undef $usrServer;
 undef $usrTargetName;
 undef $usrSdkName;
@@ -88,9 +72,6 @@ undef $sdkVer;
 
 my $boardName;
 
-# A temp directory to keep files we're going to need for curl commands
-my $tmpDir = tempdir( CLEANUP => 1 );
-
 # Token data from the server
 my $tokenCSRF;
 my $tokenWRS;
@@ -108,14 +89,12 @@ sub print_usage
     print "\t-i                 -- Target info & server status\n";
     print "\t-id <str>          -- Register using service device ID\n";
     print "\t-n <string>        -- Target name\n";
-    print "\t-p <string>        -- SDK server password\n";
     print "\t-proxy <url>       -- For target registration\n";
     print "\t-q                 -- Quiet / no messages\n";
     print "\t-s <server>        -- HAC server to register with\n";
     print "\t-sname <string>    -- SDK name\n";
     print "\t-sver  <string>    -- SDK version\n";
     print "\t-tap <host>:<port> -- Target Agent proxy service\n";
-    print "\t-u <string>        -- SDK server user name\n";
     print "\t-v                 -- Verbose messages\n";
     print "\t-?, --help         -- Print this usage info\n\n";
     print "  The tool supports directly registering a device or \n";
@@ -208,18 +187,6 @@ while ( scalar @ARGV )
                 die "ERROR: Missing option after $arg! Aborting!\n";
             }	    
         }
-    elsif ( "-p" eq $arg )
-        {
-           $arg = shift( @ARGV );
-            if ( defined ( $arg ) )
-            {
-		$usrPassword = $arg;
-            }
-            else
-            {
-                die "ERROR: Missing option after $arg! Aborting!\n";
-            }	    
-        }
     elsif ( "-q" eq $arg )
         {
 	    $logLvl = -1;
@@ -263,18 +230,6 @@ while ( scalar @ARGV )
 	{
 	    die "ERROR: Missing option after $arg! Aborting!\n";
 	}
-    }
-    elsif ( "-u" eq $arg )
-    {
-	$arg = shift( @ARGV );
-	if ( defined ( $arg ) )
-	{
-	    $usrName = $arg;
-	}
-	else
-	{
-	    die "ERROR: Missing option after $arg! Aborting!\n";
-	}	    
     }
     elsif ( "-tap" eq $arg )
     {
@@ -346,15 +301,6 @@ else
     logMsg( "Generated board name: $boardName\n", { debug => 1 } );
 }
 
-if ( $usrName && $usrPassword )
-{
-    unless ( $boardName )
-    {
-         print_usage();
-         die "ERROR: Can't register without a board name!\n";
-    }
-}
-
 # Get the name and version of the SDK from the data files in a known
 # location if they aren't specified as CLI options
 if ( $usrSdkName )
@@ -386,14 +332,6 @@ else
 }
 
 logMsg( "Using HAC Server: $hacServer\n", { debug => 1 } );
-
-# make sure we have the minimum required options
-unless ( ( defined $usrName && defined $usrPassword ) || ( 0 != $regServerIdF ) )
-{
-    logMsg( "No user name or password detected, requesting registration code\n",
-	    { lvl => 1 } );
-    $getRegCodeF = 1;
-}
 
 # Setup the proxy server that is used for target registration
 if ( $usrHttpsProxy )
@@ -520,91 +458,48 @@ if ( $queryOperation || $regServerIdF )
     }
 }
 
-if ( $getRegCodeF )
+# Generate a target with the specified name
+my ( $devRegKey, $devUid, $devServerUrl ) =
+    hacGenerateNamedTarget( $hacServer, $boardName, $sdkName, $sdkVer,
+			    $tokenCSRF, \$r, \$errMsg );
+
+if ( $r )
 {
-    # Generate a target with the specified name
-    my ( $devRegKey, $devUid, $devServerUrl ) =
-	hacGenerateNamedTarget( $hacServer, $boardName, $sdkName, $sdkVer,
-				$tokenCSRF, \$r, \$errMsg );
-   
-    if ( $r )
-    {
-	logMsg( "ERROR registering:\n " . 
-		"  $errMsg\n", { fatal => 1 } );
-    }
-
-    logMsg( "Device Reg Key[ $devRegKey ]\n", { debug => 1 } );    
-    logMsg( "Device UID[ $devUid ]\n", { debug => 1 } );   
-    logMsg( "Device Server Url[ $devServerUrl ]\n", { debug => 1 } );
-    
-    $devCfgData = $devServerUrl . ";ID=" . $devUid . $devMgrProxy;
-    
-    logMsg( "Device Mgr Cfg[ $devCfgData ]\n", { debug => 1 } );
-    
-    # Get the expiration time for the key
-    my ( $devRegStatus, $devRegExpireTime_s ) = 
-	hacGetKeyExpiration( $hacServer, $devRegKey, $tokenCSRF,
-			     \$r, \$errMsg );
-
-    if ( $r )
-    {
-	logMsg( "ERROR getting registration expiration:\n " . 
-		"  $errMsg", { fatal => 1 } );
-    }
-
-    my $devRegExpireTime_m = $devRegExpireTime_s / 60;
-   
-    if ( $usrCgiCaller == 0 )
-    { 
-	print( "Created target [ $boardName ] on server [ $hacServer ]\n" .
-	       "Device regisration status: $devRegStatus\n" .
-	       "Device registration expires in $devRegExpireTime_m (mins)\n" .
-	       "Device Registration Key: $devRegKey\n" );
-    }
-    else
-    {
-	print( "$devRegKey:$devRegExpireTime_s:$devRegStatus");
-    }
+    logMsg( "ERROR registering:\n " . 
+	    "  $errMsg\n", { fatal => 1 } );
 }
-elsif ( !$regServerIdF )
+
+logMsg( "Device Reg Key[ $devRegKey ]\n", { debug => 1 } );    
+logMsg( "Device UID[ $devUid ]\n", { debug => 1 } );   
+logMsg( "Device Server Url[ $devServerUrl ]\n", { debug => 1 } );
+
+$devCfgData = $devServerUrl . ";ID=" . $devUid . $devMgrProxy;
+
+logMsg( "Device Mgr Cfg[ $devCfgData ]\n", { debug => 1 } );
+
+# Get the expiration time for the key
+my ( $devRegStatus, $devRegExpireTime_s ) = 
+    hacGetKeyExpiration( $hacServer, $devRegKey, $tokenCSRF,
+			 \$r, \$errMsg );
+
+if ( $r )
 {
-    # Get the WRS token
-    $tokenWRS = hacGetWRSToken( $hacServer, $usrName, $usrPassword,
-				$tokenCSRF, \$r, \$errMsg );
-    
-    if ( $r )
-    {
-	logMsg( "ERROR getting WRS:\n " . 
-		"  $errMsg\n", { fatal => 1 } );
-    }
+    logMsg( "ERROR getting registration expiration:\n " . 
+	    "  $errMsg", { fatal => 1 } );
+}
 
-    logMsg( "WRS Token: [ " . $tokenWRS . " ]\n", { debug => 1 } );
+my $devRegExpireTime_m = $devRegExpireTime_s / 60;
 
-    # Generate a target with the specified name
-    my ( $devUid, $devServerUrl ) = 
-	hacRegisterTarget( $hacServer, $boardName, $sdkName, $sdkVer,
-			   $tokenCSRF, $tokenWRS, \$r, \$errMsg );
-
-    if ( $r )
-    {
-	logMsg( "ERROR registering target:\n " . 
-		"  $errMsg\n", { fatal => 1 } );
-    }
-
-    $devCfgData = $devServerUrl . ";ID=" . $devUid . $devMgrProxy;
-    
-    logMsg( "Device UID[ $devUid ]\n", { debug => 1 } );
-    logMsg( "Device Server Url[ $devServerUrl ]\n", { debug => 1 } );
-    logMsg( "Device Mgr Cfg[ $devCfgData ]\n", { debug => 1 } );
-
-    if ( $usrCgiCaller == 0 )
-        {
-        print( "Created target [ $boardName ] on server [ $hacServer ]\n" );
-        }
-    else
-        {
-        print( "$boardName:$hacServer");
-        }
+if ( $usrCgiCaller == 0 )
+{ 
+    print( "Created target [ $boardName ] on server [ $hacServer ]\n" .
+	   "Device regisration status: $devRegStatus\n" .
+	   "Device registration expires in $devRegExpireTime_m (mins)\n" .
+	   "Device Registration Key: $devRegKey\n" );
+}
+else
+{
+    print( "$devRegKey:$devRegExpireTime_s:$devRegStatus");
 }
 
 ( 0 == setDefaultSdkCfgData( $devCfgData . "\n" ) ) or 
@@ -617,3 +512,4 @@ execCmd( $cmd, \$r );
 
 die "ERROR: Restarting HAC service failed!\n" if ( $r );
 
+exit 0;
