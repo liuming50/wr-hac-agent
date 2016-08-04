@@ -31,7 +31,6 @@ $VERSION     = 1.3;
 %EXPORT_TAGS = ( DEFAULT => [qw( &setLogLvl &setLogOptions &logMsg &execCmd &hacGetCSRFToken &hacGenerateNamedTarget &hacGetKeyExpiration &hacGetDeviceStatus &hacGetWRSToken &getDefaultSdkVer &getDefaultSdkName &setDefaultSdkCfgData &getDefaultSdkCfgData &getDefaultHacServer &getDefaultBoardName &getDefaultHttpsProxy &setDefaultHttpsProxy &useHttpsProxy &parseDevMgrData )] );
 
 use JSON::PP;
-use Sys::Syslog qw(:standard :macros);
 
 #  ****** NOTE ABOUT USE OF HTTPS_PROXY ****** 
 #
@@ -55,10 +54,6 @@ my $logExtOnFatalF = 1;
 # local behavior.
 my $logOutStream;
 undef $logOutStream;
-
-# Flag to tell the logMsg() function to call syslog. Assumes caller
-# has previously setup syslog() properly.
-my $logUseSyslogF = 0;
 
 # The expected location for SDK name and version data
 my $sdkVerFile = "/etc/default/sdkVersion.txt";
@@ -117,11 +112,6 @@ sub setLogOptions
     if ( exists ${ $options }{ out } )
     {
 	$logOutStream = ${ $options }{ out };
-    }
-
-    if ( exists ${ $options }{ useSyslog } )
-    {
-	$logUseSyslogF = ${ $options }{ useSyslog };
     }
 }
 
@@ -194,28 +184,7 @@ sub logMsg
     if ( exists ${ $args }{ fatal } ||
 	 ( ( $logLvl > -1 ) && ( $lvl <= $logLvl ) ) )
     {
-	if ( $logUseSyslogF )
-	{
-	    # Map levels
-	    my $sLvl = "info";	    
-
-	    if ( $lvl == 0 )
-	    {
-		$sLvl = "error" ;
-	    }
-	    elsif ( $lvl >= 2 )
-	    {
-		$sLvl = "info";
-	    }
-	    
-	    $msg =~ s/[\n\r]+$//;
-	    $msg =~ s/[\n\r]+/;/g;
-	    syslog( $sLvl, "%s", $msg );
-	}
-	else
-	{
-	    print $out "$msg";
-	}
+	print $out "$msg";
     }
     
     if ( exists ${ $args }{ fatal } )
